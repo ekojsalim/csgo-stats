@@ -58,7 +58,7 @@ const card = {
   width: "100%",
   margin: "25px 0",
   boxShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.14)",
-  borderRadius: "3px",
+  borderRadius: "2px",
   color: "rgba(0, 0, 0, 0.87)",
   background: "#fff",
   overflow: "initial",
@@ -130,13 +130,13 @@ const cardActions = {
 
 const cardHeader = {
   margin: "-20px 15px 0",
-  borderRadius: "3px",
+  borderRadius: "2px",
   padding: "15px",
 };
 
 const defaultBoxShadow = {
   border: "0",
-  borderRadius: "3px",
+  borderRadius: "2px",
   boxShadow:
     "0 10px 20px -12px rgba(0, 0, 0, 0.42), 0 3px 20px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
   padding: "10px 0",

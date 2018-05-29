@@ -6,9 +6,11 @@
     "@material-ui/core": "^1.1.0",
     "@material-ui/icons": "^1.1.0",
     "chartist": "^0.11.0",
+    "moment": "^2.22.1",
     "react": "^16.4.0",
     "react-chartist": "^0.13.1",
     "react-dom": "^16.4.0",
+    "react-file-reader-input": "^2.0.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
