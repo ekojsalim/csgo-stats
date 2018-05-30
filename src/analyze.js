@@ -19,7 +19,8 @@ const analyzedData = {
       assists: 0
     }
   },
-  matches: []
+  matches: [],
+  bannedPlayers: []
 };
 
 // Bans
@@ -71,29 +72,102 @@ function proccessData(data) {
         .slice(0, -1)
         .join(" ")
     );
+    function getDuration(str) {
+        return moment.duration(`00:${str}`);
+    }
+    match.duration = getDuration(match.duration);
+    match.waitTime = getDuration(match.waitTime);
     // mark Banned players
     match.teams.team1.players = match.teams.team1.players.map(markPlayersBans);
     match.teams.team2.players = match.teams.team2.players.map(markPlayersBans);
+    // tags the match
+    // win/loss/draw
+    // the map
+    // has cheater
+    match.chips = [match.map.split(" ")[1], match.result];
+    const hasCheater = match.teams.team1.players.filter((a) => a.bans.isBanned).length > 0 || match.teams.team2.players.filter((a) => a.bans.isBanned).length > 0;
+    if(hasCheater) match.chips.push("Has Banned Players");
+    // player names
+    const playerNames = [...match.teams.team1.players.map((a) => a.name), ...match.teams.team2.players.map((a)=>a.name)]
+    match.tags = [match.result, match.map.split(" ")[1], ...playerNames, (hasCheater ? "hasCheater" : "noCheater")];
     return match;
   });
 }
 
-function markPlayersBans(player) {
-    const z = playersBans.filter(ban => ban.SteamId === player.steamID);
-    const isBanned = z.length > 0;
-    const banTypes = [];
-    if(z.CommunityBanned) banTypes.push("community");
-    if(z.VACBanned) banTypes.push("vac");
-    if(z.NumberOfGameBans) banTypes.push("overwatch");
-    const dateBanned = isBanned ? moment().subtract(z.DaysSinceLastBan, "days") : 0;
-    return {
-        ...player,
-        bans: {
-            isBanned,
-            banTypes,
-            dateBanned
-        }
+function getMatchMapStatistics(data) {
+    let matchData = {
+        totalWins: 0,
+        totalLosses: 0,
+        totalDraws: 0,
+        winStreaks: 0,
+        lossStreaks: 0,
+        longestMatch: data.matches[0].duration,
+        shortestMatch: data.matches[0].duration,
+        totalMatch: 0,
     };
+    let mapData = {
+        // inferno: {
+        //     win: 0,
+        //     loss: 0,
+        //     draw: 0,
+        //     winRate: 0,
+        //     played: 0
+        // }
+    };
+    let winStreak = 0;
+    let lossStreak = 0;
+    data.matches.forEach((match) => {
+        const map = match.map.split(" ")[1];
+        matchData.totalMatch++;
+        if(!mapData[map]) mapData[map] = {win: 0, loss: 0, draw: 0, winRate: 0, played: 0};
+        mapData[map].played++;
+        mapData[map][match.result]++;
+        if(match.result === "win") {
+            matchData.totalWins++;
+            lossStreak = 0;
+            winStreak++
+        }
+        if(match.result === "loss") {
+            matchData.totalLosses++;
+            winStreak = 0;
+            lossStreak++;
+        }
+        if(match.duration.asMilliseconds() < matchData.shortestMatch.asMilliseconds()) matchData.shortestMatch = match.duration;
+        if(match.duration.asMilliseconds() > matchData.longestMatch.asMilliseconds()) matchData.longestMatch = match.duration;
+        if(match.result === "draw") matchData.totalDraws++;
+        if(winStreak > matchData.winStreaks) matchData.winStreaks = winStreak;
+        if(lossStreak > matchData.lossStreaks) matchData.lossStreaks = lossStreak;
+    });
+    Object.entries(mapData).forEach(([key, value])=> {
+        mapData[key].winRate = Math.round((value.win/value.played)*100);
+    });
+    return {matchData, mapData};
+}
+
+function markPlayersBans(player) {
+  const z = playersBans.filter(ban => ban.SteamId === player.steamID);
+  const isBanned = z.length > 0;
+  if(isBanned && analyzedData.bannedPlayers.filter((a => a.id === player.steamID)).length <= 0) {
+      analyzedData.bannedPlayers.push({
+          id: player.steamID,
+          name: player.name
+      });
+  }
+  const banTypes = [];
+  if (z.CommunityBanned) banTypes.push("community");
+  if (z.VACBanned) banTypes.push("vac");
+  if (z.NumberOfGameBans) banTypes.push("overwatch");
+  const dateBanned = isBanned
+    ? moment().subtract(z.DaysSinceLastBan, "days")
+    : 0;
+  return {
+    ...player,
+    bans: {
+      isBanned,
+      banTypes,
+      dateBanned
+    }
+  };
 }
 
 // get user data(kills, deaths, etc) given the steamID
@@ -122,7 +196,6 @@ function getMainUserStats(data) {
     ratingArr: []
   };
   const z = getUserData(data.userSteamID, data);
-  console.log(z);
   z.forEach(userMatch => {
     const { kills, deaths, assists, mvps } = userMatch;
     stats.killsArr.push(kills);
@@ -143,7 +216,8 @@ function getMainUserStats(data) {
     total: {
       kills: _sum(stats.killsArr),
       deaths: _sum(stats.deathsArr),
-      assists: _sum(stats.assistsArr)
+      assists: _sum(stats.assistsArr),
+      mvps: _sum(stats.mvpsArr),
     }
   };
 }
@@ -180,12 +254,37 @@ function _round(number, precision) {
 }
 
 async function analyze(data) {
-    populatePlayers(data);
-    await getBans(playersBans);
-    analyzedData.matches = proccessData(data);
-    console.log(analyzedData.matches);
-    getMainUserStats(data);
-    return analyzedData;
+  populatePlayers(data);
+  playersBans = (await getBans(playersBans)).filter((ban) => {
+      return ban.CommunityBanned || ban.VACBanned || ban.NumberOfGameBans;
+  });
+  analyzedData.matches = proccessData(data);
+  getMainUserStats(data);
+  const {mapData, matchData} = getMatchMapStatistics(data);
+  analyzedData.mapData = mapData;
+  analyzedData.matchData = matchData;
+  return analyzedData;
 }
 
 export default analyze;
+
+// 1.15 - Rain
+// 1.00 - Karrigan
+// 1.26 - Niko
+// 1.24 - Device
+// 1.39 - S1mple
+// 1.17 - Magisk
+// 1.06 - gla1ve
+// 1.14 - flamie
+// 1.23 - electronic
+// 1.08 - flusha
+// 0.96 - Golden
+// 1.16 - tarik
+// 1.18 - autimatic
+// 1.10 - Stewie2k
+// 1.28 - coldzera
+// 1.20 - Fallen
+
+// kills - Number($$("div.stats-row > span")[1].outerText)
+// deaths - Number($$("div.stats-row > span")[5].outerText)
+// maps - Number($$("div.stats-row > span")[13].outerText)
