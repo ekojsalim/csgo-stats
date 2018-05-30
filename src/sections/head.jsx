@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Grid, withStyles } from "@material-ui/core";
+import { Grid, withStyles, Typography } from "@material-ui/core";
 
-import GridItem from "components/gridItem";
 import ImageHeader from "components/imageHeader";
-import Button from "components/button";
+import Button from "@material-ui/core/Button";
 import FileReaderInput from "react-file-reader-input";
 import Notification from "components/notification";
 
@@ -11,19 +10,25 @@ import { ImportExport } from "@material-ui/icons";
 
 import { container } from "assets/jss/main";
 
-const headStyle = {
+const headStyle = theme => ({
   title: {
-    fontSize: "4.2rem",
-    fontWeight: "600",
-    display: "inline-block",
-    position: "relative",
-    marginBottom: "10px",
-    lineHeight: "1.15em"
+    // fontSize: "4.2rem",
+    // fontWeight: "600",
+    // display: "inline-block",
+    // position: "relative",
+    // marginBottom: "10px",
+    // lineHeight: "1.15em"
+    color: "white",
+    textTransform: "uppercase",
+    letterSpacing: "0.55rem",
+    marginBottom: "1vh"
   },
   subtitle: {
-    fontSize: "1.2rem",
-    maxWidth: "500px",
-    margin: "10px 0"
+    // fontSize: "1.2rem",
+    // maxWidth: "500px",
+    // margin: "10px 0"
+    color: "white",
+    fontWeight: 300
   },
   containerTitle: {
     ...container,
@@ -31,12 +36,17 @@ const headStyle = {
   },
   brand: {
     color: "#FFFFFF",
-    textAlign: "left"
   },
   buttonImport: {
-    padding: "8px 16px"
+    margin: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  gridContainer: {
+    textAlign: "center"
   }
-};
+});
 
 class Head extends Component {
     state = {
@@ -58,25 +68,24 @@ class Head extends Component {
       <ImageHeader image={"http://i.imgur.com/5NNc5U4.jpg"}>
       {this.state.showNotif ? <Notification message={this.state.message}/> : ""}
         <div className={classes.containerTitle}>
-          <Grid container>
-            <GridItem>
+          <Grid container justify="center" className={classes.gridContainer}>
+            <Grid item>
               <div className={classes.brand}>
-                <h1 className={classes.title}>Matchmaking Analysis</h1>
-                <h3 className={classes.subtitle}>
+                <Typography variant="display2" className={classes.title}>Matchmaking Analysis</Typography>
+                <Typography variant="title" className={classes.subtitle} gutterBottom>
                   Import your matchmaking data to start, get your data using this script.
-                </h3>
+                </Typography>
                 <FileReaderInput as="text" onChange={this.getFile}>
                   <Button
-                    type="button"
-                    color="danger"
+                    variant="raised"
+                    color="secondary"
                     className={classes.buttonImport}
                   >
-                    <ImportExport />
-                    <span>IMPORT</span>
+                    IMPORT<ImportExport className={classes.rightIcon} />
                   </Button>
                 </FileReaderInput>
               </div>
-            </GridItem>
+            </Grid>
           </Grid>
         </div>
       </ImageHeader>

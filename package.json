@@ -20,7 +20,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
     "eslint-config-google": "^0.9.1",
-    "eslint-config-prettier": "^2.9.0"
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-babel": "^5.1.0"
   }
 }

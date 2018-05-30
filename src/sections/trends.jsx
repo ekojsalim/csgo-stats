@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
 
-import GridItem from "components/gridItem";
-
-import { container } from "assets/jss/main";
-
 const trendsStyle = {
   title: {
     fontSize: "4.2rem",
