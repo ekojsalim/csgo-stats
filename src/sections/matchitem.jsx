@@ -117,7 +117,7 @@ class SimpleExpansionPanel extends React.Component {
   render() {
     const { classes, matchData, userMatchData } = this.props;
     function resolveMap(map) {
-      const path = "image/";
+      const path = "/csgo-stats/image/";
       const linkMap = {
         Inferno: path + "inferno.jpg",
         Mirage: path + "mirage.jpg",

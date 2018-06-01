@@ -75,7 +75,7 @@ class Head extends Component {
   render() {
     const { classes, loading } = this.props;
     return (
-      <ImageHeader image={"http://i.imgur.com/5NNc5U4.jpg"}>
+      <ImageHeader image={"/csgo-stats/image/back.jpg"}>
       {loading && <Notification message={this.state.message}/>}
         <div className={classes.containerTitle}>
           <Grid container justify="center" className={classes.gridContainer}>

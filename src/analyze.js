@@ -272,7 +272,10 @@ function getMainUserStats(data) {
     assistsArr: [],
     mvpsArr: [],
     ratingArr: [],
-    matches: []
+    matches: [],
+    pingArr: [],
+    hspArr: [],
+    scoreArr: [],
   };
   const z = getUserData(data.userSteamID, data);
   z.forEach(userMatch => {
@@ -289,6 +292,9 @@ function getMainUserStats(data) {
     stats.killsArr.push(kills);
     stats.deathsArr.push(deaths);
     stats.assistsArr.push(assists);
+    stats.pingArr.push(ping);
+    stats.hspArr.push(hsp);
+    stats.scoreArr.push(score);
     stats.mvpsArr.push(mvps);
     stats.ratingArr.push(getRating(kills, deaths));
     stats.matches.push({
@@ -306,13 +312,17 @@ function getMainUserStats(data) {
       kills: _avg(stats.killsArr),
       deaths: _avg(stats.deathsArr),
       assists: _avg(stats.assistsArr),
-      rating: _avg(stats.ratingArr)
+      rating: _avg(stats.ratingArr),
+      ping: _avg(stats.pingArr),
+      hsp: _avg(stats.hspArr),
+      score: _avg(stats.scoreArr),
     },
     total: {
       kills: _sum(stats.killsArr),
       deaths: _sum(stats.deathsArr),
       assists: _sum(stats.assistsArr),
-      mvps: _sum(stats.mvpsArr)
+      mvps: _sum(stats.mvpsArr),
+      score: _sum(stats.scoreArr),
     },
     matches: stats.matches
   };

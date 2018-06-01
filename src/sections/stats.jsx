@@ -63,13 +63,17 @@ class Trends extends Component {
           kills: 0,
           deaths: 0,
           rating: 1,
-          assists: 0
+          assists: 0,
+          score: 0,
+          hsp: 0,
+          ping: 0
         },
         total: {
           kills: 0,
           deaths: 0,
           assists: 0,
-          mvps: 0
+          mvps: 0,
+          score: 0,
         }
       }
     }) : this.props.stats;
@@ -117,6 +121,10 @@ class Trends extends Component {
           {getCard("Total Assists", stats.user.total.assists)}
           {getCard("Total Deaths", stats.user.total.deaths)}
           {getCard("Total MVPs", stats.user.total.mvps)}
+          {getCard("Total Score", stats.user.total.score)}
+          {getCard("Average Score", Math.round(stats.user.average.score))}
+          {getCard("Average HSP", `${stats.user.average.hsp} %`)}
+          {getCard("Average ping", `${Math.round(stats.user.average.ping)} ms`)}
         </Grid>
         <Typography variant="display1" className={classes.heading}>Match Statistics</Typography>
         <Divider inset className={classes.divider}/>
