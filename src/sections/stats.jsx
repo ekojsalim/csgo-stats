@@ -3,8 +3,6 @@ import {
   Typography,
   withStyles,
   Card,
-  CardActions,
-  Button,
   CardContent,
   Grid,
   Divider,
@@ -56,7 +54,26 @@ class Trends extends Component {
       { player: "coldzera", rating: 1.28 },
       { player: "me", rating: -1 }
     ].sort((a, b) => b.rating - a.rating);
-    const { classes, stats } = this.props;
+    const { classes } = this.props;
+    console.log(this.props.stats);
+    let stats = !this.props.stats ? ({
+      user: {
+        id: "",
+        name: "",
+        average: {
+          kills: 0,
+          deaths: 0,
+          rating: 1,
+          assists: 0
+        },
+        total: {
+          kills: 0,
+          deaths: 0,
+          assists: 0,
+          mvps: 0
+        }
+      }
+    }) : this.props.stats;
     const worsePlayer = c.find(a => a.rating < stats.user.average.rating);
     function getCard(title, stat) {
         return (<Grid item xs={12} sm={3} md={3}>
