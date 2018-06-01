@@ -14,7 +14,6 @@ import {
   ListItem,
   ListItemText,
   Dialog,
-  DialogTitle,
   Typography
 } from "@material-ui/core";
 const styles = theme => ({
@@ -66,11 +65,45 @@ class PlayerTable extends React.Component {
     };
   };
   render() {
-    console.log(this.state.dialogMessage);
     const { players, classes } = this.props;
     const { dialogMessage, showDialog } = this.state;
     return (
       <Grid item xs={12} sm={5} md={5}>
+        {(
+          <Dialog
+            onClose={this.handleClose}
+            open={showDialog}
+            disableBackdropClick={false}
+            aria-labelledby="simple-dialog-title"
+          >
+            <div>
+              <List>
+                <ListItem divider>
+                  <ListItemText>
+                    <Typography variant="title">Ban Type</Typography>
+                    {dialogMessage.banTypes
+                      ? dialogMessage.banTypes.join(",")
+                      : ""}
+                  </ListItemText>
+                </ListItem>
+                <ListItem divider>
+                  <ListItemText>
+                    <Typography variant="title">Date Banned</Typography>
+                    {dialogMessage.banTypes
+                      ? dialogMessage.dateBanned.format("MMM Do YYYY")
+                      : ""}
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText>
+                    <Typography variant="title">Steam ID</Typography>
+                    {dialogMessage.banTypes ? dialogMessage.steamID : ""}
+                  </ListItemText>
+                </ListItem>
+              </List>
+            </div>
+          </Dialog>
+        )}
         <Paper className={classes.root}>
           <Table>
             <TableHead>
@@ -91,48 +124,6 @@ class PlayerTable extends React.Component {
                     className={classNames(isBanned, isMain)}
                     onClick={isBanned ? this.handleClick(n) : () => {}}
                   >
-                    {isBanned && (
-                      <Dialog
-                        onClose={this.handleClose}
-                        open={showDialog}
-                        aria-labelledby="simple-dialog-title"
-                      >
-                        <div>
-                          <List>
-                            <ListItem divider>
-                              <ListItemText>
-                                <Typography variant="title">
-                                  Ban Type
-                                </Typography>
-                                {dialogMessage.banTypes
-                                  ? dialogMessage.banTypes.join(",")
-                                  : ""}
-                              </ListItemText>
-                            </ListItem>
-                            <ListItem divider>
-                              <ListItemText>
-                                <Typography variant="title">
-                                  Date Banned
-                                </Typography>
-                                {dialogMessage.banTypes
-                                  ? dialogMessage.dateBanned.format()
-                                  : ""}
-                              </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText>
-                                <Typography variant="title">
-                                  Steam ID
-                                </Typography>
-                                {dialogMessage.banTypes
-                                  ? dialogMessage.steamID
-                                  : ""}
-                              </ListItemText>
-                            </ListItem>
-                          </List>
-                        </div>
-                      </Dialog>
-                    )}
                     <TableCell component="th" scope="row">
                       <div className={classes.nameContainer}>
                         <Avatar className={classes.avatar}>{n.name[0]}</Avatar>

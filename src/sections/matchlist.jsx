@@ -5,7 +5,6 @@ import {
   Divider,
   Typography,
   Grid,
-  Input,
   Button,
   TextField,
   MenuItem
@@ -79,8 +78,6 @@ const styles = theme => ({
 class Matches extends React.PureComponent {
   render() {
     const {matches, userMatchesData} = this.props
-    console.log("called");
-    console.log(matches);
     return (
       <div>
         {matches &&

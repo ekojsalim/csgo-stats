@@ -52,7 +52,7 @@ class Ban extends Component {
     }
     return (
       <div id="stats">
-        <Typography variant="display1" className={classes.heading}>Player Statistics</Typography>
+        <Typography variant="display1" className={classes.heading}>Cheaters Statistics</Typography>
         <Divider inset className={classes.divider}/>
         <Grid container spacing={16}>
           {getCard("Cheaters encountered", banData.cheaterEncountered || 0)}

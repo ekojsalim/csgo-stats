@@ -172,7 +172,6 @@ function markPlayersBans(match) {
     const z = analyzedData.banInfo.find(ban => ban.SteamId === player.steamID) || {};
     const isBanned = Object.keys(z).length > 0;
     const banTypes = [];
-    console.log(z);
     if (z.CommunityBanned) banTypes.push("Community");
     if (z.VACBanned) banTypes.push("VAC");
     if (z.NumberOfGameBans) banTypes.push("Overwatch");
@@ -231,7 +230,6 @@ function getBanStats() {
     matches: 0,
     wins: 0,
   };
-  console.log(z);
   z.forEach((match)=> {
     function inTeam(team, id) {
       return team.players.filter(a => a.steamID === id).length > 0;

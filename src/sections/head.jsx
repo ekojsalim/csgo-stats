@@ -66,7 +66,7 @@ class Head extends Component {
 
   getFile = (e, results) => {
     results.forEach(result => {
-      const [e, file] = result;
+      const [e] = result;
       console.log("Data successfully imported!");
       this.setState({showNotif: true, message:"Analyzing data! Please be patient."});
       this.props.dispatch(JSON.parse(e.target.result));

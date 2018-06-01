@@ -18,11 +18,8 @@ const parallaxStyle = {
   };
 
 class ImageHeader extends Component {
-    constructor() {
-        super();
-    }
     render() {
-        const { classes, children, image, ...rest } = this.props;
+        const { classes, children, image} = this.props;
         return (
           <div
             className={classes.image}

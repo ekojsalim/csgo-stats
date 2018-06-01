@@ -55,7 +55,6 @@ class Trends extends Component {
       { player: "me", rating: -1 }
     ].sort((a, b) => b.rating - a.rating);
     const { classes } = this.props;
-    console.log(this.props.stats);
     let stats = !this.props.stats ? ({
       user: {
         id: "",
